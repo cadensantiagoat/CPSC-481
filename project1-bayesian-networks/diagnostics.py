@@ -6,24 +6,35 @@ class Diagnostics:
     """ Use a Bayesian network to diagnose between three lung diseases """
 
     def __init__(self):
-     # Initializing Bayesian Network with nodes
-     self.network = BayesNet([
-         #Root nodes
-        ('asia', '', [0.01]),
-        ('Smoking', '', 0.5),
+        self.network = BayesNet([
+            # 0 parents -> key must be ()
+            ("Asia", "", {(): 0.01}),
+            ("Smoking", "", {(): 0.5}),
 
-        #Disease Nodes
-        ('Tuberculosis', 'Asia', {T: 0.05, F: 0.001}),
-        ('LungCancer', 'Smoking', {T: 0.1, F:0.01}), 
-        ('Bronchitis', 'Smoking', {T: 0.6, F:0.3}), 
+            # 1 parent -> keys must be (T,) and (F,)
+            ("Tuberculosis", "Asia", {(T,): 0.05, (F,): 0.01}),
+            ("Cancer", "Smoking", {(T,): 0.1, (F,): 0.01}),
+            ("Bronchitis", "Smoking", {(T,): 0.6, (F,): 0.3}),
 
-        #Deterministic OR Nodes: TBorC = Tuberculosis OR LungCancer
-        ('TBorC', 'Tuberculosis', 'LungCancer', {(T,T): 1.0, (T,F): 1.0, (F,T): 1.0, (F,F): 0.0}),
+            # 2 parents -> keys are (parent1, parent2)
+            ("TBorC", "Tuberculosis Cancer", {
+                (T, T): 1.0,
+                (T, F): 1.0,
+                (F, T): 1.0,
+                (F, F): 0.0
+            }),
 
-        #Symptom Nodes
-        ('Xray', 'TBorC', {T:0.99, F: 0.05}),
-        ('Dyspnea', 'TBorC', 'Bronchitis', {(T,T): 0.9, (T,F): 0.7, (F,T): 0.8, (F,F): 0.1})
-     ])
+            # 1 parent -> tuple keys
+            ("Xray", "TBorC", {(T,): 0.99, (F,): 0.05}),
+
+            # 2 parents -> tuple keys
+            ("Dyspnea", "TBorC Bronchitis", {
+                (T, T): 0.9,
+                (T, F): 0.7,
+                (F, T): 0.8,
+                (F, F): 0.1
+            })
+        ])
 
     def diagnose (self, asia, smoking, xray, dyspnea):
         # helper function to convert strings to boolean or None
