@@ -53,5 +53,12 @@ class Diagnostics:
         if dyspnea_val is not None:
             evidence['Dyspnea'] = dyspnea_val
 
+        # calculating probabilities
+        tb_prob = enumeration_ask('Tuberculosis', evidence, self.network)[True]
+
+        cancer_prob = enumeration_ask('LungCancer', evidence, self.network)[True]
+
+        bronchitis_prob = enumeration_ask('Bronchitis', evidence, self.network)[True]
+
         # To be implemented by the student
         return ["the disease", -1.0] # placeholder return value, to be replaced by the student
