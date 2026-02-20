@@ -60,5 +60,13 @@ class Diagnostics:
 
         bronchitis_prob = enumeration_ask('Bronchitis', evidence, self.network)[True]
 
+        # Calculating probabilities for each disease given the evidence
+        disease_prob = {
+            "TB": tb_prob,
+            "Cancer": cancer_prob,
+            "Bronchitis": bronchitis_prob
+        }
+
+        best_disease = max(disease_prob, key=disease_prob.get)
         # To be implemented by the student
-        return ["the disease", -1.0] # placeholder return value, to be replaced by the student
+        return [best_disease, disease_prob[best_disease]] # placeholder return value, to be replaced by the student
