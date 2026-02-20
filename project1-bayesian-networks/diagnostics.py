@@ -8,12 +8,19 @@ class Diagnostics:
     def __init__(self):
      # Initializing Bayesian Network with nodes
      self.network = BayesNet([
+         #Root nodes
         ('asia', '', [0.01]),
         ('Smoking', '', 0.5),
+
+        #Disease Nodes
         ('Tuberculosis', 'Asia', {T: 0.05, F: 0.001}),
         ('LungCancer', 'Smoking', {T: 0.1, F:0.01}), 
         ('Bronchitis', 'Smoking', {T: 0.6, F:0.3}), 
-        ('TBorC', 'Tuburculosis', 'LungCancer', {(T,T): 1.0, (T,F): 1.0, (F,T): 1.0, (F,F): 0.0}),
+
+        #Deterministic OR Nodes: TBorC = Tuberculosis OR LungCancer
+        ('TBorC', 'Tuberculosis', 'LungCancer', {(T,T): 1.0, (T,F): 1.0, (F,T): 1.0, (F,F): 0.0}),
+
+        #Symptom Nodes
         ('Xray', 'TBorC', {T:0.99, F: 0.05}),
         ('Dyspnea', 'TBorC', 'Bronchitis', {(T,T): 0.9, (T,F): 0.7, (F,T): 0.8, (F,F): 0.1})
      ])
