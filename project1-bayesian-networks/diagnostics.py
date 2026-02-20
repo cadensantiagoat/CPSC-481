@@ -11,7 +11,7 @@ class Diagnostics:
         ('asia', '', [0.01]),
         ('Smoking', '', 0.5),
         ('Tuberculosis', 'Asia', {T: 0.05, F: 0.001}),
-        ('LungCancer', 'Smoking', {T: 0.6, F:0.3}), 
+        ('LungCancer', 'Smoking', {T: 0.1, F:0.01}), 
         ('Bronchitis', 'Smoking', {T: 0.6, F:0.3}), 
         ('TBorC', 'Tuburculosis', 'LungCancer', {(T,T): 1.0, (T,F): 1.0, (F,T): 1.0, (F,F): 0.0}),
         ('Xray', 'TBorC', {T:0.99, F: 0.05}),
