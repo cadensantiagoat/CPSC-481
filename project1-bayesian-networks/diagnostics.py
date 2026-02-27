@@ -67,7 +67,7 @@ class Diagnostics:
         # calculating probabilities
         tb_prob = enumeration_ask('Tuberculosis', evidence, self.network)[True]
 
-        cancer_prob = enumeration_ask('LungCancer', evidence, self.network)[True]
+        cancer_prob = enumeration_ask('Cancer', evidence, self.network)[True]
 
         bronchitis_prob = enumeration_ask('Bronchitis', evidence, self.network)[True]
 
