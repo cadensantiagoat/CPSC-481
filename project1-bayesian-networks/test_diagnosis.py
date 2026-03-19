@@ -1,3 +1,4 @@
+import time
 from diagnostics import Diagnostics
 
 d = Diagnostics()
@@ -11,3 +12,4 @@ tests = [
 
 for t in tests:
     print(t, "->", d.diagnose(*t))
+    time.sleep(10)
