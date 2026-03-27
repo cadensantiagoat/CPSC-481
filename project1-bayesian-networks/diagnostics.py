@@ -30,7 +30,7 @@ Return ONLY a JSON object, nothing else:
 
 The disease field must be exactly "TB", "Cancer", or "Bronchitis" — the one with the highest posterior probability."""
 
-    def diagnose(self, asia, smoking, xray, dyspnea):
+    def diagnose(self, visit_to_asia, smoking, xray, dyspnea):
         # helper function to convert strings to boolean or None
         def translate(value):
             match value:
@@ -42,7 +42,7 @@ The disease field must be exactly "TB", "Cancer", or "Bronchitis" — the one wi
                     return None
 
         # Translating inputs
-        asia_val = translate(asia)
+        asia_val = translate(visit_to_asia)
         smoking_val = translate(smoking)
         xray_val = translate(xray)
         dyspnea_val = translate(dyspnea)
@@ -63,12 +63,16 @@ The disease field must be exactly "TB", "Cancer", or "Bronchitis" — the one wi
         # Build the prompt
         prompt = self.system_prompt + f"\n\nEVIDENCE: {evidence}\n\nReturn ONLY the JSON object."
 
-        # Call the Gemini API
+        # Call the Gemini API and enforces pure JSON response
         payload = {
-            "contents": [{"parts": [{"text": prompt}]}]
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "responseMimeType": "application/json"
+    }
         }
 
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={API_KEY}"
+        # Use the Gemini 2.5 Flash model for better performance
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={API_KEY}"
 
         req = urllib.request.Request(
             url,
@@ -87,12 +91,6 @@ The disease field must be exactly "TB", "Cancer", or "Bronchitis" — the one wi
         raw_text = response_data["candidates"][0]["content"]["parts"][0]["text"].strip()
         print(f"Gemini response: {raw_text}")
 
-        # Strip markdown fences if present
-        if raw_text.startswith("```"):
-            raw_text = raw_text.split("```")[1]
-            if raw_text.startswith("json"):
-                raw_text = raw_text[4:]
-            raw_text = raw_text.strip()
 
         # Parse result
         result = json.loads(raw_text)
